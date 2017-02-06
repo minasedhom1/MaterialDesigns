@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">MaterialDesigns</string>
+    <string name="facebook_app_id">1251459601575440</string>
+    <string-array name="list_items">
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+        <item>zeko</item>
+    </string-array>
+</resources>
