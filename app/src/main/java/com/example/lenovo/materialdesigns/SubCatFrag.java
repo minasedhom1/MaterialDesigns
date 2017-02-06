@@ -39,7 +39,7 @@ ArrayList<Item>itemArrayList;
              //      jsonArray = new JSONArray(response) ;
                     for (int i = 0; i < jsonArray.length(); i++)
 
-                    {
+                    { 
                         JSONObject object = jsonArray.getJSONObject(i);
                         Item item=new Item();
                        // item.setName(object.getInt("CategoryID"));
