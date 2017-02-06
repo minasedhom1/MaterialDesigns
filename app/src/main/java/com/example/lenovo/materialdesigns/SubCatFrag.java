@@ -31,7 +31,7 @@ ArrayList<Item>itemArrayList;
 
             @Override
             public void onResponse(String response) {
-                try {
+                try { 
                     JsonElement root=new JsonParser().parse(response);
                     response = root.getAsString();  //not .toString
                     JSONObject jsonObject=new JSONObject(response);
@@ -39,7 +39,7 @@ ArrayList<Item>itemArrayList;
              //      jsonArray = new JSONArray(response) ;
                     for (int i = 0; i < jsonArray.length(); i++)
 
-                    { 
+                    {
                         JSONObject object = jsonArray.getJSONObject(i);
                         Item item=new Item();
                        // item.setName(object.getInt("CategoryID"));
