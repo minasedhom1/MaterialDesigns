@@ -46,9 +46,8 @@ public class ItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item);
         ItemList= (ListView) findViewById(R.id.clickedItem_customList);
         itemArrayList = new ArrayList<>();
-       Intent intent=getIntent();
-      String id=  intent.getStringExtra("catID");
-      fetchDataRequest.setUrl(Variables.URL_GET_SELECTED_CATEGORY_ITEMS + id );
+
+      fetchDataRequest.setUrl(Variables.URL_GET_SELECTED_CATEGORY_ITEMS + Variables.catID );
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override
@@ -176,9 +175,9 @@ public class ItemActivity extends AppCompatActivity {
                 holder.call.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent phoneIntent = new Intent(Intent.ACTION_CALL);
+                     /*   Intent phoneIntent = new Intent(Intent.ACTION_CALL);
                         phoneIntent.setData(Uri.parse("tel:" + myItem.getPhone1()));
-                        startActivity(phoneIntent);
+                        startActivity(phoneIntent);*/
                     }
                 });
 

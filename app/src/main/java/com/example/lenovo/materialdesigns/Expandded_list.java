@@ -3,6 +3,7 @@ package com.example.lenovo.materialdesigns;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -31,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,11 +49,96 @@ public class Expandded_list extends AppCompatActivity {
     JSONArray jsonArray;
     RequestQueue queue;
     static  int sub_id;
-
+static ArrayList<Item> fav_items =new ArrayList<Item>();
+    static ArrayList<Item> all_items =new ArrayList<Item>();
+    ArrayList<String>integers=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expandded_list);
+        queue= Volley.newRequestQueue(this);
+        StringRequest favrequest=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JsonElement root=new JsonParser().parse(response);
+                        response = root.getAsString();
+
+                        try {
+                            JSONObject jsonObject= new JSONObject(response);
+
+                            jsonArray=jsonObject.getJSONArray("allFav");
+
+                            for (int i = 0; i < jsonArray.length(); i++)
+
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                object= object.getJSONObject("fav");
+                                Item item=new Item();
+                                item.setId(object.getString("ItemID"));
+                                item.setName(htmlRender(object.getString("Name_En")));
+                                item.setDescription(htmlRender(object.getString("Description_En")));
+                                // item.setPhone1(object.getString("Phone1"));
+                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                                // item.setCategoryName(object.getString("CategoryName_En"));
+                                fav_items.add(item);
+                            }
+
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+
+                },null);
+
+
+
+
+        StringRequest request_all_items=new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+
+
+
+                        try {
+                            JsonElement root=new JsonParser().parse(response);
+                            response = root.getAsString();
+                            JSONObject jsonObject=new JSONObject(response);
+                            jsonArray=jsonObject.getJSONArray("ItemsList");
+                            for(int i=0;i<fav_items.size();i++)
+                            {
+                                integers.add(fav_items.get(i).getId());
+                            }
+                            for (int i = 0; i < jsonArray.length(); i++)
+
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                Item item=new Item();
+                                item.setId(object.getString("ItemID"));
+                                item.setName(htmlRender(object.getString("Name_En")));
+                                item.setDescription(htmlRender(object.getString("Description_En")));
+                                item.setPhone1(object.getString("Phone1"));
+                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                                item.setCategoryName(object.getString("CategoryName_En"));
+                                if(integers.contains(item.getId()))
+                                {
+                                    item.setLike(true);
+                                }
+                                all_items.add(item);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },null)
+        ;
+
 
         expListView= (ExpandableListView) findViewById(R.id.expandded_list);
         categoryArrayList = new ArrayList<>();
@@ -93,9 +180,22 @@ public class Expandded_list extends AppCompatActivity {
             }
         };
         fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
-        queue= Volley.newRequestQueue(this);
-        queue.add(fetchRequest);
 
+        queue.add(favrequest);
+        queue.add(request_all_items);
+        queue.add(fetchRequest);
+        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Category cat = (Category) listAdapter.getGroup(groupPosition);
+
+                if(!cat.isHas_sub())
+                {   Variables.catID=String.valueOf(cat.get_id());
+                   startActivity(new Intent(Expandded_list.this,ItemActivity.class));
+                }
+                return false;
+            }
+        });
         expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -279,4 +379,116 @@ public class Expandded_list extends AppCompatActivity {
       //  StringRequest subCats=
 return subCat_array;
 }
+    public  ArrayList<Item> getItems(ArrayList<Item> favourite_list)
+    {final ArrayList<Item> allItems_array=new ArrayList();
+
+        final ArrayList<String>integers=new ArrayList<>();
+        for(int i=0;i<favourite_list.size();i++)
+        {
+            integers.add(favourite_list.get(i).getId());
+        }
+        //favourite_list.get(0).getId();
+        queue.add(new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+
+
+
+                        try {
+                            JsonElement root=new JsonParser().parse(response);
+                            response = root.getAsString();
+                            JSONObject jsonObject=new JSONObject(response);
+                            jsonArray=jsonObject.getJSONArray("ItemsList");
+                            for (int i = 0; i < jsonArray.length(); i++)
+
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                Item item=new Item();
+                                item.setId(object.getString("ItemID"));
+                                item.setName(htmlRender(object.getString("Name_En")));
+                                item.setDescription(htmlRender(object.getString("Description_En")));
+                                item.setPhone1(object.getString("Phone1"));
+                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                                item.setCategoryName(object.getString("CategoryName_En"));
+                               /* if(integers.contains(item.getId()))
+                                {
+                                    item.setLike(true);
+                                }*/
+                                allItems_array.add(item);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },null)
+        );
+
+
+        //  StringRequest subCats=
+        return allItems_array;
+    }
+
+
+    /*public  ArrayList<Item> getFavourtieItems()
+    {final ArrayList<Item> favouriteItems_array=new ArrayList();
+       StringRequest request=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JsonElement root=new JsonParser().parse(response);
+                        response = root.getAsString();
+
+                        try {
+                            JSONObject jsonObject= new JSONObject(response);
+
+                            jsonArray=jsonObject.getJSONArray("allFav");
+
+                            for (int i = 0; i < jsonArray.length(); i++)
+
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                object= object.getJSONObject("fav");
+                                Item item=new Item();
+                                item.setId(object.getString("ItemID"));
+                                item.setName(htmlRender(object.getString("Name_En")));
+                                item.setDescription(htmlRender(object.getString("Description_En")));
+                                // item.setPhone1(object.getString("Phone1"));
+                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                                // item.setCategoryName(object.getString("CategoryName_En"));
+                               favouriteItems_array.add(item);
+                            }
+
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+
+                },null);
+         queue.add(request);
+
+
+
+
+        //  StringRequest subCats=
+        return favouriteItems_array;
+    }*/
+
+
+    public String htmlRender(String ss)
+
+    {
+        ss=ss.replace("span","font");
+        ss=ss.replace("style=\"color:","color=");
+        ss=ss.replace(";\"","");
+        ss=ss.replaceAll("<p>","");
+        ss=ss.replaceAll("</p>",""); //********
+        return ss;
+    }
+
 }
