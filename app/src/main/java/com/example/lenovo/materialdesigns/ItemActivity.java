@@ -38,7 +38,7 @@ public class ItemActivity extends AppCompatActivity {
     ListView ItemList;
     ArrayList<Item> itemArrayList = new ArrayList<>();
     private ArrayAdapter itemAdapter;
-    static ArrayList<Item> favouriteList=new ArrayList<>();
+   // static ArrayList<Item> favouriteList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class ItemActivity extends AppCompatActivity {
         ItemList= (ListView) findViewById(R.id.clickedItem_customList);
         itemArrayList = new ArrayList<>();
 
-      fetchDataRequest.setUrl(Variables.URL_GET_SELECTED_CATEGORY_ITEMS + Variables.catID );
+     /* fetchDataRequest.setUrl(Variables.URL_GET_SELECTED_CATEGORY_ITEMS + Variables.catID );
         Response.Listener<String> responseListener = new Response.Listener<String>() {
 
             @Override
@@ -68,7 +68,7 @@ public class ItemActivity extends AppCompatActivity {
                      jsonArray=jsonObject.getJSONArray("ItemsList");
 
                       //not .toString
-                   /* jsonArray = new JSONArray(response) ;*/
+                   *//* jsonArray = new JSONArray(response) ;*//*
 
 
                     for (int i = 0; i < jsonArray.length(); i++)
@@ -106,8 +106,14 @@ public class ItemActivity extends AppCompatActivity {
 
         fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
         RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(fetchRequest);
-
+        queue.add(fetchRequest);*/
+        for(int i=0;i<Expandded_list.all_items.size();i++)
+        {
+            if(Expandded_list.all_items.get(i).getCategoryName().matches(Variables.catID))
+                itemArrayList.add(Expandded_list.all_items.get(i));
+        }
+        itemAdapter=new MyCustomListAdapter(getBaseContext(),android.R.layout.simple_list_item_1,R.id.name2_tv,itemArrayList);
+        ItemList.setAdapter(itemAdapter);
 
         ItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -198,7 +204,7 @@ public class ItemActivity extends AppCompatActivity {
                 /*-------------------like btn--------------------*/
 
                 holder.shineButton.init(ItemActivity.this);
-
+                holder.shineButton.setChecked(myItem.isLike());
 
                 //holder.shineButton.setChecked(itemArrayList.get(position).isLike());
 

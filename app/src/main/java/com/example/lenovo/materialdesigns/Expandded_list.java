@@ -57,7 +57,7 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expandded_list);
         queue= Volley.newRequestQueue(this);
-        StringRequest favrequest=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
+        /*StringRequest favrequest=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -91,11 +91,11 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
                     }
 
                 },null);
+*/
 
 
 
-
-        StringRequest request_all_items=new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
+      /*  StringRequest request_all_items=new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
                 new Response.Listener<String>() {
 
                     @Override
@@ -137,7 +137,7 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
 
                     }
                 },null)
-        ;
+        ;*/
 
 
         expListView= (ExpandableListView) findViewById(R.id.expandded_list);
@@ -180,17 +180,20 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
             }
         };
         fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
-
-        queue.add(favrequest);
-        queue.add(request_all_items);
         queue.add(fetchRequest);
+
+        getFavourtieItems();
+        getItems();
+       // queue.add(request_all_items);
+
+        queue.start();
         expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 Category cat = (Category) listAdapter.getGroup(groupPosition);
 
                 if(!cat.isHas_sub())
-                {   Variables.catID=String.valueOf(cat.get_id());
+                {   Variables.catID=String.valueOf(cat.get_name());
                    startActivity(new Intent(Expandded_list.this,ItemActivity.class));
                 }
                 return false;
@@ -379,105 +382,88 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
       //  StringRequest subCats=
 return subCat_array;
 }
-    public  ArrayList<Item> getItems(ArrayList<Item> favourite_list)
-    {final ArrayList<Item> allItems_array=new ArrayList();
+    public  void getItems()
+    {StringRequest request_all_items=new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
+            new Response.Listener<String>() {
 
-        final ArrayList<String>integers=new ArrayList<>();
-        for(int i=0;i<favourite_list.size();i++)
-        {
-            integers.add(favourite_list.get(i).getId());
-        }
-        //favourite_list.get(0).getId();
-        queue.add(new StringRequest(Request.Method.GET, Variables.URL_GET_ALL_ACTIVE_ITEMS,
-                new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
 
-                    @Override
-                    public void onResponse(String response) {
+                    try {
+                        JsonElement root=new JsonParser().parse(response);
+                        response = root.getAsString();
+                        JSONObject jsonObject=new JSONObject(response);
+                        jsonArray=jsonObject.getJSONArray("ItemsList");
+                        for(int i=0;i<fav_items.size();i++)
+                        {
+                            integers.add(fav_items.get(i).getId());
+                        }
+                        for (int i = 0; i < jsonArray.length(); i++)
 
-
-
-                        try {
-                            JsonElement root=new JsonParser().parse(response);
-                            response = root.getAsString();
-                            JSONObject jsonObject=new JSONObject(response);
-                            jsonArray=jsonObject.getJSONArray("ItemsList");
-                            for (int i = 0; i < jsonArray.length(); i++)
-
+                        {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            Item item=new Item();
+                            item.setId(object.getString("ItemID"));
+                            item.setName(htmlRender(object.getString("Name_En")));
+                            item.setDescription(htmlRender(object.getString("Description_En")));
+                            item.setPhone1(object.getString("Phone1"));
+                            item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                            item.setCategoryName(object.getString("CategoryName_En"));
+                            if(integers.contains(item.getId()))
                             {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                Item item=new Item();
-                                item.setId(object.getString("ItemID"));
-                                item.setName(htmlRender(object.getString("Name_En")));
-                                item.setDescription(htmlRender(object.getString("Description_En")));
-                                item.setPhone1(object.getString("Phone1"));
-                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
-                                item.setCategoryName(object.getString("CategoryName_En"));
-                               /* if(integers.contains(item.getId()))
-                                {
-                                    item.setLike(true);
-                                }*/
-                                allItems_array.add(item);
-
+                                item.setLike(true);
                             }
+                            all_items.add(item);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                },null)
-        );
 
-
-        //  StringRequest subCats=
-        return allItems_array;
+                }
+            },null);
+        queue.add(request_all_items);
     }
 
 
-    /*public  ArrayList<Item> getFavourtieItems()
-    {final ArrayList<Item> favouriteItems_array=new ArrayList();
-       StringRequest request=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JsonElement root=new JsonParser().parse(response);
-                        response = root.getAsString();
+    public  void getFavourtieItems()
+    {StringRequest favrequest=new StringRequest(Request.Method.GET, Variables.URL_GET_FAVOURITES_FOR_ID,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    JsonElement root=new JsonParser().parse(response);
+                    response = root.getAsString();
 
-                        try {
-                            JSONObject jsonObject= new JSONObject(response);
+                    try {
+                        JSONObject jsonObject= new JSONObject(response);
 
-                            jsonArray=jsonObject.getJSONArray("allFav");
+                        jsonArray=jsonObject.getJSONArray("allFav");
 
-                            for (int i = 0; i < jsonArray.length(); i++)
+                        for (int i = 0; i < jsonArray.length(); i++)
 
-                            {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                object= object.getJSONObject("fav");
-                                Item item=new Item();
-                                item.setId(object.getString("ItemID"));
-                                item.setName(htmlRender(object.getString("Name_En")));
-                                item.setDescription(htmlRender(object.getString("Description_En")));
-                                // item.setPhone1(object.getString("Phone1"));
-                                item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
-                                // item.setCategoryName(object.getString("CategoryName_En"));
-                               favouriteItems_array.add(item);
-                            }
-
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
+                        {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            object= object.getJSONObject("fav");
+                            Item item=new Item();
+                            item.setId(object.getString("ItemID"));
+                            item.setName(htmlRender(object.getString("Name_En")));
+                            item.setDescription(htmlRender(object.getString("Description_En")));
+                            // item.setPhone1(object.getString("Phone1"));
+                            item.setPhoto1("https://sa3ednymalladmin.azurewebsites.net/IMG/"+object.getString("Photo1"));
+                            // item.setCategoryName(object.getString("CategoryName_En"));
+                            fav_items.add(item);
                         }
 
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
                     }
 
-                },null);
-         queue.add(request);
+                }
 
-
-
-
-        //  StringRequest subCats=
-        return favouriteItems_array;
-    }*/
+            },null);
+     queue.add(favrequest);
+    }
 
 
     public String htmlRender(String ss)
