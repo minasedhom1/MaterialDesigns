@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "com.example.lenovo.materialdesigns"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -32,7 +32,12 @@ dependencies {
     compile 'us.feras.mdv:markdownview:1.1.0'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.beardedhen:androidbootstrap:2.3.1'
     compile 'com.github.medyo:fancybuttons:1.8.3'
-
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
     testCompile 'junit:junit:4.12'
 }
+
+
+apply plugin: 'com.google.gms.google-services'

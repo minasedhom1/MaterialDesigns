@@ -1,6 +1,7 @@
 package com.example.lenovo.materialdesigns;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.melnykov.fab.FloatingActionButton;
 import com.sackcentury.shinebuttonlib.ShineButton;
 
@@ -20,10 +22,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_main);
         shineButton  = (ShineButton) findViewById(R.id.po_image1);
         shineButton.init(this);
-     if(savedInstanceState!=null)
+        if(savedInstanceState!=null)
         shineButton.setChecked(savedInstanceState.getBoolean("btn"));
         shineButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab.attachToListView(listView);
         fab.hide();
-    listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView absListView, int i) {
 
@@ -88,14 +91,17 @@ popUp= (Button) findViewById(R.id.popup_btn);
             }
         });
 
-
+        Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome/fonts/fontawesome-webfont.ttf" );
         subCatItems= (Button) findViewById(R.id.button3);
+        subCatItems.setTypeface(font);
+        subCatItems.setText(getString(R.string.phone_font)+" CALL");
         subCatItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
+
     }
 
     @Override
