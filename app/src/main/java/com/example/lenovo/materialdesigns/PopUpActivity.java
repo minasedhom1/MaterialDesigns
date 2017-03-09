@@ -29,12 +29,12 @@ ImageView imageView;
                         .setContentText("Here's a custom image.")
                         .setCustomImage(R.mipmap.carfor)
                         .show();*/
-                showpopup();
+                //     showpopup();
 
             }
         });
     }
-    private void showpopup()
+/*    private void showpopup()
     {
 
         final Dialog nagDialog = new Dialog(this);
@@ -44,5 +44,5 @@ ImageView imageView;
         ivPreview.setImageResource(R.mipmap.movie);
         nagDialog.show();
 
-    }
+    }*/
 }

@@ -24,7 +24,6 @@ ArrayList<Item>itemArrayList;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_cat_frag);
-
         fetchDataRequest.setUrl(Variables.URL_GET_SELECTED_SUBCATEGORY_ITEM+2);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -52,13 +51,12 @@ ArrayList<Item>itemArrayList;
                         toas(s);
                     }
 
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
+
         fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
         RequestQueue queue= Volley.newRequestQueue(this);
         queue.add(fetchRequest);
@@ -67,3 +65,4 @@ ArrayList<Item>itemArrayList;
     public void toas(String s){
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();}
 }
+

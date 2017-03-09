@@ -143,9 +143,9 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
         expListView= (ExpandableListView) findViewById(R.id.expandded_list);
         categoryArrayList = new ArrayList<>();
         /*----------------------------------------------------------------------------------------------------------------------------------------------------*/
-        fetchDataRequest.setUrl(Variables.URL_GET_CATEGORIES_GOODS);
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
+      //  fetchDataRequest.setUrl(Variables.URL_GET_CATEGORIES_GOODS);
+   StringRequest request=new StringRequest(Request.Method.GET,Variables.URL_GET_CATEGORIES_GOODS,
+       new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -166,8 +166,6 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
                         if(myCategory.isHas_sub())
                         {myCategory.setSub_array(getSubs(object.getInt("CategoryID")));}
                         categoryArrayList.add(myCategory);
-
-                        // listDataHeader.add(object.getString("Name_En"));
                     }
 
                     listAdapter = new CustomExpandedListAdapter();
@@ -178,10 +176,10 @@ static ArrayList<Item> fav_items =new ArrayList<Item>();
                     e.printStackTrace();
                 }
             }
-        };
-        fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
-        queue.add(fetchRequest);
-
+        },null);
+   //    fetchDataRequest fetchRequest = new fetchDataRequest(responseListener);
+       /*  queue.add(fetchRequest);*/
+        AppController.getInstance().addToRequestQueue(request);
         getFavourtieItems();
         getItems();
        // queue.add(request_all_items);

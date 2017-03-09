@@ -1,24 +1,34 @@
 package com.example.lenovo.materialdesigns;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.melnykov.fab.FloatingActionButton;
 import com.sackcentury.shinebuttonlib.ShineButton;
+import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     boolean  like=false;
     FloatingActionButton fab;
     ShineButton shineButton;
     Button popUp,faceLogin,expandlist,subCatItems;
+    ArrayAdapter<String> itemsAdapter;
+    ArrayList<String>items ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
         shineButton  = (ShineButton) findViewById(R.id.po_image1);
         shineButton.init(this);
         if(savedInstanceState!=null)
+            //items.add();
         shineButton.setChecked(savedInstanceState.getBoolean("btn"));
+       /* itemsAdapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);*/
         shineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,15 +111,18 @@ popUp= (Button) findViewById(R.id.popup_btn);
         subCatItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final Dialog nagDialog = new Dialog(MainActivity.this);
+                nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                nagDialog.setContentView(R.layout.pop_up_item_image);
+                ListView listView1 = (ListView) nagDialog.findViewById(R.id.list);
+      //        Picasso.with(MainActivity.this).load(myItem.getPhoto1()).error(R.mipmap.ic_launcher).into(ivPreview);  //             //new DownLoadImageTask(image).execute(imageUrl);
+                nagDialog.show();
             }
         });
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
         super.onSaveInstanceState(outState);
         Boolean likelike=shineButton.isChecked();
         outState.putBoolean("btn",likelike);
