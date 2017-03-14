@@ -117,28 +117,30 @@ android:text="&#128663;&#128663;&#128663;&#128663;&#xf095;"
         android:layout_height="wrap_content"
         android:id="@+id/button3"
        />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Expandable List"
     android:id="@+id/list_btn"
         />
-    <com.beardedhen.androidbootstrap.AwesomeTextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:bootstrapBrand="success"
-        app:fontAwesomeIcon="fa_android"
+android:text="facebook comment"
+        android:id="@+id/facebook_comment"
         />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+</LinearLayout>
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:bootstrapBrand="success"
-        android:background="#fff666"
-app:fontAwesomeIcon="fa_phone"
-        android:id="@+id/bootstrapButton" />
-
+        android:text="Recycler view"
+        android:id="@+id/recycler_activity_btn"
+        />
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     boolean  like=false;
     FloatingActionButton fab;
     ShineButton shineButton;
-    Button popUp,faceLogin,expandlist,subCatItems;
+    Button popUp,faceLogin,expandlist,subCatItems,commentbtn,recyclerbtn;
     ArrayAdapter<String> itemsAdapter;
     ArrayList<String>items ;
     @Override
@@ -34,6 +34,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_main);
+
+
+        recyclerbtn= (Button) findViewById(R.id.recycler_activity_btn);
+        recyclerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,RecyclerViewActivity.class));
+            }
+        });
+
+
+        commentbtn= (Button) findViewById(R.id.facebook_comment);
+        commentbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,Facebook.class));
+            }
+        });
+
+
         shineButton  = (ShineButton) findViewById(R.id.po_image1);
         shineButton.init(this);
         if(savedInstanceState!=null)
